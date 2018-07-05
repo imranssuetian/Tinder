@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "552517820097",
+    "firebase_url": "https://tinder-91fa2.firebaseio.com",
+    "project_id": "tinder-91fa2",
+    "storage_bucket": "tinder-91fa2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:552517820097:android:4c5d113d904bd983",
+        "android_client_info": {
+          "package_name": "com.aicreation.tinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "552517820097-8vp5tsrpfao40oam7gi1a8i0lldduguq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aicreation.tinder",
+            "certificate_hash": "a08f8bd4379e9bb6929debd5642130ab01fd8b75"
+          }
+        },
+        {
+          "client_id": "552517820097-gvu7o2hfdf4dhntrs2gr00dc1hkuchm2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_vLkc-2N_WCVuAagsZIGpbbKpNw_YQPE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "552517820097-gvu7o2hfdf4dhntrs2gr00dc1hkuchm2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
