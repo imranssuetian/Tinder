@@ -18,10 +18,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private cards cards_data[];
@@ -69,14 +71,22 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onLeftCardExit(Object dataObject) {
-                //Do something on the left!
-                //You also have access to the original object.
-                //If you want to use it just cast it (String) dataObject
+                //2nd cahnge video 12 success
+
+                cards obj = (cards) dataObject;
+                String userId = obj.getUserId();
+                userDb.child(userId).child("connections").child("nope").child(currentUId).setValue(true);
                 Toast.makeText(MainActivity.this,"left",Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onRightCardExit(Object dataObject) {
+                //3rd cahnge video 12 success
+
+                cards obj = (cards) dataObject;
+                String userId = obj.getUserId();
+                userDb.child(userId).child("connections").child("yeps").child(currentUId).setValue(true);
+                isConnectionMatch(userId);
                 Toast.makeText(MainActivity.this,"right",Toast.LENGTH_SHORT).show();
             }
 
@@ -102,76 +112,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void isConnectionMatch(String userId) {
+        //4th cahnge video 12 success
 
-    private String userGender;
-    private String oppositeUserGender;
-
-    public void checkUserGender(){
-
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-
-        //for Male Database
-        DatabaseReference maleDb = FirebaseDatabase.getInstance().getReference().child("Users").child("Male");
-        maleDb.addChildEventListener(new ChildEventListener() {
+        DatabaseReference currentUserConnectionsDb = userDb.child(currentUId).child("connections").child("yeps").child(userId);
+        currentUserConnectionsDb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    //5th cahnge video 12 success
 
-                if(dataSnapshot.getKey().equals(user.getUid())){
-                        userGender = "Male";
-                        oppositeUserGender = "Female";
-                        getOppositeGenderUsers();
+                    Toast.makeText(MainActivity.this,"new Connection",Toast.LENGTH_LONG).show();
+                    userDb.child(dataSnapshot.getKey()).child("connections").child("matches").child(currentUId).setValue(true);
+                    userDb.child(currentUId).child("connections").child("matches").child(dataSnapshot.getKey()).setValue(true);
+
                 }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
-        //for female database
-        DatabaseReference FemaleDb = FirebaseDatabase.getInstance().getReference().child("Users").child("Female");
-        FemaleDb.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                if(dataSnapshot.getKey().equals(user.getUid())){
-                    userGender = "Female";
-                    oppositeUserGender = "Male";
-                    getOppositeGenderUsers();
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
             }
 
             @Override
@@ -182,15 +137,58 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private String userGender;
+    private String oppositeUserGender;
+
+    public void checkUserGender(){
+        //6th cahnge video 12 success
+
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        //for Male Database
+        DatabaseReference usersDb = userDb.child(user.getUid());
+
+        usersDb.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    if (dataSnapshot.child("gender") != null){
+                        userGender = dataSnapshot.child("gender").getValue().toString();
+                        oppositeUserGender = "Female";
+                        switch (userGender){
+                            case "Male":
+                                oppositeUserGender = "Female";
+                                break;
+                            case "Female":
+                                oppositeUserGender = "Male";
+                                break;
+                        }
+                        getOppositeGenderUsers();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
     public void getOppositeGenderUsers(){
-        DatabaseReference oppositeGenderDb = FirebaseDatabase.getInstance().getReference().child("Users").child(oppositeUserGender);
-        oppositeGenderDb.addChildEventListener(new ChildEventListener() {
+
+
+        userDb.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                if(dataSnapshot.exists()){
+                if(dataSnapshot.exists() && !dataSnapshot.child("connections").child("nope").hasChild(currentUId) && !dataSnapshot.child("connections").child("yeps").hasChild(currentUId) && dataSnapshot.child("gender").getValue().toString().equals(oppositeUserGender)){
 
-                    cards item = new cards(dataSnapshot.getKey(),dataSnapshot.child("name").getValue().toString());
+                    String profileImageUrl = "default";
+                    if (!dataSnapshot.child("profileImageUrl").getValue().equals("default")){
+                        profileImageUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
+                    }
+                    cards item = new cards(dataSnapshot.getKey(),dataSnapshot.child("name").getValue().toString(),profileImageUrl);
                     rowItems.add(item);
                     arrayAdapter.notifyDataSetChanged();
                 }
@@ -223,6 +221,12 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this,ChooseLoginRegistrationActivity.class);
         startActivity(intent);
         finish();
+        return;
+    }
+
+    public void goToSettings(View view) {
+        Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
+        startActivity(intent);
         return;
     }
 }
