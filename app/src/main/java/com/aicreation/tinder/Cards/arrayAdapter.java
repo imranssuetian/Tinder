@@ -1,4 +1,4 @@
-package com.aicreation.tinder;
+package com.aicreation.tinder.Cards;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.aicreation.tinder.R;
 import com.bumptech.glide.Glide;
 
 import java.util.List;

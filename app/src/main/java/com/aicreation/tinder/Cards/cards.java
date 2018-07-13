@@ -1,4 +1,4 @@
-package com.aicreation.tinder;
+package com.aicreation.tinder.Cards;
 
 public class cards {
 
