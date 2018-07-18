@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aicreation.tinder.R;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -36,11 +37,17 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesViewHolders> {
     @Override
     public void onBindViewHolder(@NonNull MatchesViewHolders holder, int position) {
         holder.mMatchid.setText(matchesList.get(position).getUserId());
+        holder.mMatchName.setText(matchesList.get(position).getName());
+
+        if(!matchesList.get(position).getProfileImageUrl().equals("default")) {
+
+            Glide.with(context).load(matchesList.get(position).getProfileImageUrl()).into(holder.mMatchImage);
+        }
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return matchesList.size();
     }
 }

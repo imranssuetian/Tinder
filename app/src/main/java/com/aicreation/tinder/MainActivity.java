@@ -124,8 +124,13 @@ public class MainActivity extends AppCompatActivity {
                     //5th cahnge video 12 success
 
                     Toast.makeText(MainActivity.this,"new Connection",Toast.LENGTH_LONG).show();
-                    userDb.child(dataSnapshot.getKey()).child("connections").child("matches").child(currentUId).setValue(true);
-                    userDb.child(currentUId).child("connections").child("matches").child(dataSnapshot.getKey()).setValue(true);
+
+
+                    String key = FirebaseDatabase.getInstance().getReference().child("Chat").push().getKey();
+
+                    userDb.child(dataSnapshot.getKey()).child("connections").child("matches").child(currentUId).child("ChatId").setValue(key);
+                    userDb.child(currentUId).child("connections").child("matches").child(dataSnapshot.getKey()).child("ChatId").setValue(key);
+
 
                 }
             }
