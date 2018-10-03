@@ -33,9 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private FirebaseAuth mAuth;
-
     private String currentUId;
-
     private DatabaseReference userDb;
 
     ListView listView;
@@ -187,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
         userDb.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
 
                 if(dataSnapshot.exists() && !dataSnapshot.child("connections").child("nope").hasChild(currentUId) && !dataSnapshot.child("connections").child("yeps").hasChild(currentUId) && dataSnapshot.child("gender").getValue().toString().equals(oppositeUserGender)){
 
